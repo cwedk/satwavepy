@@ -1,0 +1,12 @@
+name: satwave-env
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - jupyterlab
+  - matplotlib
+  - xarray
+  - cartopy
+  - netcdf4
+  - ipykernel
+
