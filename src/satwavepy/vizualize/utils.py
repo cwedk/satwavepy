@@ -386,15 +386,15 @@ def add_features(ax):
         edgecolor="grey",
         facecolor="none",
     )
-    gl = ax.gridlines(draw_labels=True, linewidth=0.3, zorder=10)
+    gl = ax.gridlines(draw_labels=True, linewidth=0.3, zorder=10) # draw_labels={"bottom": "x", "left": "y"}
     gl.yformatter = mticker.FuncFormatter(setup_custom_lat_formatter())
     gl.xformatter = mticker.FuncFormatter(setup_custom_lat_formatter())
-    gl.xlabel_style = {"size": 7}
-    gl.ylabel_style = {"size": 7}
+    gl.xlabel_style = {"size": 6}
+    gl.ylabel_style = {"size": 6}
     ax.add_feature(LAND, zorder=3, color=color_beige, edgecolor=color_beige)
     ax.add_feature(BORDERS, zorder=4, lw=0.3)
-    gl.xlocator = mticker.FixedLocator(np.arange(-10, 20, 1))
-    gl.ylocator = mticker.FixedLocator(np.arange(48, 66, 1))
+    gl.xlocator = mticker.FixedLocator(np.arange(-11, 9, 1))
+    gl.ylocator = mticker.FixedLocator(np.arange(48, 64, 1))
     ax.coastlines(
         resolution="10m",
         linewidth=0.2,
