@@ -213,19 +213,24 @@ def setup_custom_lat_formatter():
     return custom_lat_formatter
 
 
-def create_projection():
+def create_projection(model_extent=None):
     """
     Create orthographic projection centered on the domain.
 
     Args:
-        None
+        model_type (str): model type
     Returns:
         noProj (cartopy.crs.Projection): projection
         myProj (cartopy.crs.Projection): projection
     """
-    noProj = ccrs.PlateCarree(central_longitude=4)
-    myProj = ccrs.Orthographic(central_longitude=4, central_latitude=56)  # -2.5, 70
-    myProj._threshold = myProj._threshold / 40.0  # for higher precision plot
+    if model_extent == "small":
+        noProj = ccrs.PlateCarree(central_longitude=4)
+        myProj = ccrs.Orthographic(central_longitude=4, central_latitude=56)  # -2.5, 70
+        myProj._threshold = myProj._threshold / 40.0  # for higher precision plot
+    elif model_extent == "dcsm":
+        noProj = ccrs.PlateCarree(central_longitude=-1)
+        myProj = ccrs.Orthographic(central_longitude=-1, central_latitude=56)  # -2.5, 70
+        myProj._threshold = myProj._threshold / 40.0  # for higher precision plot
     return noProj, myProj
 
 
@@ -245,7 +250,7 @@ def create_figure_and_axes(projection, figuresize):
     return fig, ax
 
 
-def plot_zebra_border(ax, noProj, myProj):
+def plot_zebra_border(ax, noProj, myProj, extent, model_extent=None):
     """
     Add zebra border to spatial map plot. Note the offset of 4 longitude used
     to create orthographic projection.
@@ -257,10 +262,15 @@ def plot_zebra_border(ax, noProj, myProj):
     Returns:
         polygon1s (matplotlib.path.Path): polygon
     """
-
-    offset = 4  # see central longitude in projection
-    x_coords_orig = np.array([-5.0 - offset, 13 - offset, 13 - offset, -5.0 - offset])
-    y_coords_orig = np.array([50, 50, 62, 62])
+    if model_extent == "small":
+        offset = -4
+    elif model_extent == "dcsm":
+        offset = 1
+    # offset = 4  # see central longitude in projection
+    x_coords_orig = np.array([extent[0]+offset, extent[1]+offset, extent[1]+offset, extent[0]+offset])
+    y_coords_orig = np.array([extent[2], extent[2], extent[3], extent[3]])
+    # x_coords_orig = np.array([-15.0 - offset, 23 - offset, 23 - offset, -15.0 - offset])#np.array([-5.0 - offset, 13 - offset, 13 - offset, -5.0 - offset])
+    # y_coords_orig = np.array([45, 45, 67, 67]) #np.array([50, 50, 62, 62])
 
     # Interpolate the coordinates to create a higher resolution polygon
     num_points = 100  # Increase this value for a smoother boundary
